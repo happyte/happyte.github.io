@@ -5,8 +5,8 @@
     <description></description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 15 Jan 2017 19:51:59 +0800</pubDate>
-    <lastBuildDate>Sun, 15 Jan 2017 19:51:59 +0800</lastBuildDate>
+    <pubDate>Sun, 15 Jan 2017 19:59:22 +0800</pubDate>
+    <lastBuildDate>Sun, 15 Jan 2017 19:59:22 +0800</lastBuildDate>
     <generator>Jekyll v3.3.1</generator>
     
       <item>
@@ -218,7 +218,7 @@
 &lt;h2 id=&quot;敌人飞机类&quot;&gt;敌人飞机类&lt;/h2&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;1.敌人飞机类中还多了速度对象属性，考虑到随着游戏难度的增加，敌人飞机速度越来越快，这个参数需要外界传入。而且敌人飞机有小中大三种类型，是随机的，起始的位置x轴也是随机的，y轴固定从最上方开始。&lt;/li&gt;
+  &lt;li&gt;1.敌人飞机类中还多了速度对象属性，考虑到随着游戏难度的增加，敌人飞机速度越来越快，这个参数需要外界传入。而且敌人飞机有小中大三种类型，是随机的，起始的位置x轴也是随机的，y轴固定从最上方开始&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Enemy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Plane&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
@@ -251,7 +251,7 @@
 &lt;h1 id=&quot;游戏初始化类封装功能&quot;&gt;游戏初始化类(封装功能)&lt;/h1&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;1.GameInit类创建了几个类属性，g_enemyList列表用于存储敌人飞机对象，初始化玩家对象hero=object，object是元类，和用于统计玩家分数的属性score。&lt;/li&gt;
+  &lt;li&gt;1.GameInit类创建了几个类属性，g_enemyList列表用于存储敌人飞机对象，初始化玩家对象hero=object，object是元类，和用于统计玩家分数的属性score&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;   &lt;span class=&quot;c&quot;&gt;#类属性&lt;/span&gt;
