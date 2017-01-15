@@ -5,9 +5,96 @@
     <description></description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 15 Jan 2017 20:55:06 +0800</pubDate>
-    <lastBuildDate>Sun, 15 Jan 2017 20:55:06 +0800</lastBuildDate>
+    <pubDate>Sun, 15 Jan 2017 21:21:40 +0800</pubDate>
+    <lastBuildDate>Sun, 15 Jan 2017 21:21:40 +0800</lastBuildDate>
     <generator>Jekyll v3.3.1</generator>
+    
+      <item>
+        <title>flask部署到阿里云</title>
+        <description>&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;1.上周入手了阿里云，所以把前段时间写的flask程序部署到阿里云上，之前是部署到heroku上的，下面介绍下如何部署到阿里云上。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;2.阿里云部署后的链接为:&lt;a href=&quot;http://123.57.132.125&quot;&gt;http://123.57.132.125&lt;/a&gt;, 欢迎大家使用。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;3.把flask工程中的文件通过scp命令拷贝到阿里云下，我的工程下的app包、migrations包、config.py、manager.py和requirements.txt通过命令例如&lt;code class=&quot;highlighter-rouge&quot;&gt;scp -r xxx(需要拷贝的文件) root@xxxxxx(阿里云ip):/(你希望安装的目录)&lt;/code&gt;。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;4.来到拷贝到的阿里云目录下，建立虚拟坏境&lt;code class=&quot;highlighter-rouge&quot;&gt;virtualenv venv&lt;/code&gt; ,激活虚拟坏境&lt;code class=&quot;highlighter-rouge&quot;&gt;. venv/bin/activate&lt;/code&gt;。安装工程所有需要模块&lt;code class=&quot;highlighter-rouge&quot;&gt;pip install -r requirements.txt&lt;/code&gt;。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;5.在阿里云的/etc/init目录下新建一个配置文件例如&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo nano /etc/init/blog.conf&lt;/code&gt;,该文件可以在虚拟机打开时自动执行flask web程序，在该文件内写入:&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;description&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;My Blog service&quot;&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;runlevel&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2345&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;stop&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;on&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;runlevel&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2345&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;respawn&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;setuid&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;setgid&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;www&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flask&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;venv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bin&lt;/span&gt;  &lt;span class=&quot;err&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;坏境的路径&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;chdir&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flask&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;             &lt;span class=&quot;err&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;工作目录&lt;/span&gt; 
+
+&lt;span class=&quot;n&quot;&gt;exec&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;gunicorn&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;b&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;127&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;8000&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;manager&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;#&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;启动&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;web&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;服务器&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;6.启动blog.conf,输入命令&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo service blog start&lt;/code&gt;,查看是否启动成功。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;7.配置nginx反向代理服务器，如果阿里云没有安装nginx，用&lt;code class=&quot;highlighter-rouge&quot;&gt;apt-get install nginx&lt;/code&gt; 命令安装下，修改/etc/nginx/site-available/default文件，修改如下:&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-objc highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;# /ect/nginx/sites-available/default
+&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;80&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;server_name&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;211&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;55&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;proxy_pass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;//127.0.0.1:8000;
+&lt;/span&gt;        &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;Host&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Forwarded&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;For&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;proxy_add_x_forwarded_for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;8.重新启动nginx,输入命令&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo service nginx restart&lt;/code&gt;。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;9.安装postgresql，&lt;code class=&quot;highlighter-rouge&quot;&gt;apt-get install postresql&lt;/code&gt;，创建数据库输入命令&lt;code class=&quot;highlighter-rouge&quot;&gt;createdb blogdb&lt;/code&gt;。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;10.以上步骤都成功的话就可以部署你的flask程序了。&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Wed, 11 Jan 2017 10:30:00 +0800</pubDate>
+        <link>http://localhost:4000/jekyll/update/2017/01/11/flask%E9%83%A8%E7%BD%B2%E9%98%BF%E9%87%8C%E4%BA%91.html</link>
+        <guid isPermaLink="true">http://localhost:4000/jekyll/update/2017/01/11/flask%E9%83%A8%E7%BD%B2%E9%98%BF%E9%87%8C%E4%BA%91.html</guid>
+        
+        <category>Python</category>
+        
+        <category>flask</category>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
     
       <item>
         <title>高德地图API展示Scrapy爬取的链家网房源</title>

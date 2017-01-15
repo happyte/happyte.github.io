@@ -1,0 +1,59 @@
+---
+layout: post
+title:  "flask部署到阿里云"
+date:   2017-01-11 10:30:00 +0800
+categories: jekyll update
+tags: [Python,flask] 
+excerpt: 利用阿里云，把flask web程序部署到上面
+---
+
+- 1.上周入手了阿里云，所以把前段时间写的flask程序部署到阿里云上，之前是部署到heroku上的，下面介绍下如何部署到阿里云上。
+
+- 2.阿里云部署后的链接为:[http://123.57.132.125](http://123.57.132.125), 欢迎大家使用。
+
+- 3.把flask工程中的文件通过scp命令拷贝到阿里云下，我的工程下的app包、migrations包、config.py、manager.py和requirements.txt通过命令例如`scp -r xxx(需要拷贝的文件) root@xxxxxx(阿里云ip):/(你希望安装的目录)`。
+
+- 4.来到拷贝到的阿里云目录下，建立虚拟坏境`virtualenv venv` ,激活虚拟坏境`. venv/bin/activate`。安装工程所有需要模块`pip install -r requirements.txt`。
+
+- 5.在阿里云的/etc/init目录下新建一个配置文件例如`sudo nano /etc/init/blog.conf`,该文件可以在虚拟机打开时自动执行flask web程序，在该文件内写入:
+
+```objc
+description "My Blog service"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+respawn
+setuid root
+setgid www-data
+
+env PATH=/root/flask/venv/bin  # 坏境的路径
+chdir /root/flask/             # 工作目录 
+
+exec gunicorn -w 4 -b 127.0.0.1:8000 manager:app # 启动web服务器
+```
+
+- 6.启动blog.conf,输入命令`sudo service blog start`,查看是否启动成功。
+
+- 7.配置nginx反向代理服务器，如果阿里云没有安装nginx，用`apt-get install nginx` 命令安装下，修改/etc/nginx/site-available/default文件，修改如下:
+
+```objc
+# /ect/nginx/sites-available/default
+
+server {
+    listen 80;
+    server_name 10.211.55.10;
+
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+  }
+```
+
+- 8.重新启动nginx,输入命令`sudo service nginx restart`。
+
+- 9.安装postgresql，`apt-get install postresql`，创建数据库输入命令`createdb blogdb`。
+
+- 10.以上步骤都成功的话就可以部署你的flask程序了。
