@@ -1,33 +1,30 @@
 ---
 layout: page
 title: About
-subtitle: 自由、开放、合作、共享
+subtitle: life is short,we need simple
 permalink: /about/
 ---
 
 ## 简介:
 
->#### 我是染陌，目前从事web前端开发以及linux应用开发工作。
+>#### 我是happyte，电子科技大学在校学生。
 
->#### 爱读书，爱音乐，爱篮球。生活可以简单，但不可以粗糙。
+>#### 简单高效是我追求的人生精神。
 
->#### 简约精致是我的人生理念，开放自由是我的编码精神。
-
->#### 像大师一样工作，像军人一样战斗，像诗人一样生活。
 
 <br><br>
 
 ## 关注领域：
 
->#### 前端开发、Node.js、linux嵌入式技术、web安全。
+>#### Python、iOS、linux嵌入式技术。
 
 <br><br>
 
 ## 联系方式:
 
->#### Github: [https://github.com/answershuto](https://github.com/answershuto)
+>#### Github: [https://github.com/happyte](https://github.com/happyte)
 
->#### Email: [answershuto@126.com](answershuto@126.com) or [answershuto@gmail.com](answershuto@gmail.com)
+>#### Email: [zs511129@126.com](zs511129@126.com) 
 
 
 
