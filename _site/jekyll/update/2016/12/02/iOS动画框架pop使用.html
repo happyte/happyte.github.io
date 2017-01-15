@@ -1,0 +1,239 @@
+<!DOCTYPE html> <html> <head> <meta charset="utf-8"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <meta name="viewport" content="width=device-width, initial-scale=1"> <title>iOS动画框架pop使用方法</title> <meta name="description" content="facebook出品的iOS动画框架pop使用"> <link rel="stylesheet" href="/assets/css/main.css"> <link rel="canonical" href="http://localhost:4000/jekyll/update/2016/12/02/iOS%E5%8A%A8%E7%94%BB%E6%A1%86%E6%9E%B6pop%E4%BD%BF%E7%94%A8.html"> <link rel="alternate" type="application/rss+xml" title="" href="http://localhost:4000/feed.xml"> <script src="/assets/js/modernizr.js"></script> </head> <body"> <main class="wrapper"> <header class="site-header"> <a href="#navbar" id="menu-burger" class="menu-burger">Menu <span class="nav-icon"></span> <svg x="0px" y="0px" width="54px" height="54px" viewBox="0 0 54 54"> <circle fill="transparent" stroke="#000000" stroke-width="1" cx="27" cy="27" r="25" stroke-dasharray="157 157" stroke-dashoffset="157"></circle> </svg> </a> <div id="navbar" class="navbar"> <div class="navigation-wrapper"> <div class="half-block"> <h2>Navigation</h2> <nav> <ul class="primary-nav"> <li><a href="/">Home</a></li> <li><a href="/blog">Blog</a></li> <li><a href="/about">About</a></li> <li><a href="https://github.com/happyte" ><i class="icon icon-github"></i> Github</a></li> </ul> </nav> </div> </div> </div> </header> <article class="post" itemscope itemtype="http://schema.org/BlogPosting"> <header class="post-header intro"> <div class="intro-in"> <h1 class="post-title" itemprop="name headline">iOS动画框架pop使用方法</h1> <p class="post-meta"><time datetime="2016-12-02T10:30:00+08:00" itemprop="datePublished">Dec 2, 2016</time></p> </div> </header> <div class="post-content container" itemprop="articleBody"> <p>pop支持4种动画类型：弹簧动画效果、衰减动画效果、基本动画效果和自定义动画效果。</p> <h2 id="弹簧动画效果">弹簧动画效果</h2> <ul> <li>1.效果图如下:</li> </ul> <p><img src="http://img.blog.csdn.net/20161202090305441" alt="这里写图片描述" /></p> <ul> <li>2.控制器代码如下,首先用pod安装导入pop框架:</li> </ul> <div class="language-objc highlighter-rouge"><pre class="highlight"><code>   <span class="cp">#import "ViewController.h"
+</span>    <span class="cp">#import &lt;POP.h&gt;
+</span>
+    <span class="k">@interface</span> <span class="nc">ViewController</span> <span class="p">()</span>
+
+    <span class="k">@end</span>
+
+    <span class="k">@implementation</span> <span class="nc">ViewController</span>
+
+    <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">super</span> <span class="nf">viewDidLoad</span><span class="p">];</span>
+        <span class="n">CALayer</span> <span class="o">*</span><span class="n">layer</span>        <span class="o">=</span> <span class="p">[</span><span class="n">CALayer</span> <span class="nf">layer</span><span class="p">];</span>
+        <span class="n">layer</span><span class="p">.</span><span class="n">frame</span>           <span class="o">=</span> <span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">);</span>
+        <span class="n">layer</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">cyanColor</span><span class="p">].</span><span class="n">CGColor</span><span class="p">;</span>
+        <span class="n">layer</span><span class="p">.</span><span class="n">cornerRadius</span>    <span class="o">=</span> <span class="mi">25</span><span class="p">.</span><span class="n">f</span><span class="p">;</span>
+        <span class="n">layer</span><span class="p">.</span><span class="n">position</span>        <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">center</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">layer</span> <span class="nf">addSublayer</span><span class="p">:</span><span class="n">layer</span><span class="p">];</span>
+
+        <span class="c1">// 弹簧动画
+</span>        <span class="n">POPSpringAnimation</span> <span class="o">*</span><span class="n">anim</span> <span class="o">=</span> <span class="p">[</span><span class="n">POPSpringAnimation</span> <span class="nf">animationWithPropertyNamed</span><span class="p">:</span><span class="n">kPOPLayerScaleXY</span><span class="p">];</span>
+        <span class="n">anim</span><span class="p">.</span><span class="n">toValue</span>             <span class="o">=</span> <span class="p">[</span><span class="n">NSValue</span> <span class="nf">valueWithCGPoint</span><span class="p">:</span><span class="n">CGPointMake</span><span class="p">(</span><span class="mi">3</span><span class="p">.</span><span class="n">f</span><span class="p">,</span> <span class="mi">3</span><span class="p">.</span><span class="n">f</span><span class="p">)];</span>
+        <span class="n">anim</span><span class="p">.</span><span class="n">springSpeed</span>         <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="n">f</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">layer</span> <span class="nf">pop_addAnimation</span><span class="p">:</span><span class="n">anim</span> <span class="nf">forKey</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="k">@end</span>
+</code></pre></div> <ul> <li>3.上述代码设置了弹簧对象的速度(springSpeed)、最终值大小(toValue)，最后图层对象layer添加弹簧对象。</li> </ul> <h2 id="衰减动画">衰减动画</h2> <ul> <li>1.衰减动画效果</li> </ul> <p><img src="http://img.blog.csdn.net/20161202091623083" alt="这里写图片描述" /></p> <ul> <li>2.实现代码：</li> </ul> <div class="language-objc highlighter-rouge"><pre class="highlight"><code>    <span class="cp">#import "ViewController.h"
+</span>    <span class="cp">#import &lt;POP.h&gt;
+</span>
+    <span class="k">@interface</span> <span class="nc">ViewController</span> <span class="p">()</span><span class="o">&lt;</span><span class="n">POPAnimationDelegate</span><span class="o">&gt;</span>
+
+    <span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">)</span> <span class="n">UIControl</span> <span class="o">*</span><span class="n">dragView</span><span class="p">;</span>
+
+    <span class="k">@end</span>
+
+    <span class="k">@implementation</span> <span class="nc">ViewController</span>
+
+    <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span>
+    <span class="p">{</span>
+        <span class="p">[</span><span class="n">super</span> <span class="nf">viewDidLoad</span><span class="p">];</span>
+
+        <span class="c1">// 初始化dragView
+</span>        <span class="n">self</span><span class="p">.</span><span class="n">dragView</span>                    <span class="o">=</span> <span class="p">[[</span><span class="n">UIControl</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFrame</span><span class="p">:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)];</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">dragView</span><span class="p">.</span><span class="n">center</span>             <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">center</span><span class="p">;</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">dragView</span><span class="p">.</span><span class="n">layer</span><span class="p">.</span><span class="n">cornerRadius</span> <span class="o">=</span> <span class="n">CGRectGetWidth</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">dragView</span><span class="p">.</span><span class="n">bounds</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">;</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">dragView</span><span class="p">.</span><span class="n">backgroundColor</span>    <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">cyanColor</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">dragView</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">dragView</span> <span class="nf">addTarget</span><span class="p">:</span><span class="n">self</span>
+                      <span class="nf">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">touchDown</span><span class="o">:</span><span class="p">)</span>
+            <span class="n">forControlEvents</span><span class="o">:</span><span class="n">UIControlEventTouchDown</span><span class="p">];</span>
+
+        <span class="c1">// 添加手势
+</span>        <span class="n">UIPanGestureRecognizer</span> <span class="o">*</span><span class="n">recognizer</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIPanGestureRecognizer</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithTarget</span><span class="p">:</span><span class="n">self</span>
+                                                                                 <span class="nf">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">handlePan</span><span class="o">:</span><span class="p">)];</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">dragView</span> <span class="nf">addGestureRecognizer</span><span class="p">:</span><span class="n">recognizer</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">touchDown</span><span class="o">:</span><span class="p">(</span><span class="n">UIControl</span> <span class="o">*</span><span class="p">)</span><span class="n">sender</span> <span class="p">{</span>
+        <span class="p">[</span><span class="n">sender</span><span class="p">.</span><span class="n">layer</span> <span class="nf">pop_removeAllAnimations</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">handlePan</span><span class="o">:</span><span class="p">(</span><span class="n">UIPanGestureRecognizer</span> <span class="o">*</span><span class="p">)</span><span class="n">recognizer</span> <span class="p">{</span>
+        <span class="c1">// 拖拽
+</span>        <span class="n">CGPoint</span> <span class="n">translation</span> <span class="o">=</span> <span class="p">[</span><span class="n">recognizer</span> <span class="nf">translationInView</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">];</span>
+        <span class="n">recognizer</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">CGPointMake</span><span class="p">(</span><span class="n">recognizer</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">center</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">translation</span><span class="p">.</span><span class="n">x</span><span class="p">,</span>
+                                         <span class="n">recognizer</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">center</span><span class="p">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">translation</span><span class="p">.</span><span class="n">y</span><span class="p">);</span>
+        <span class="p">[</span><span class="n">recognizer</span> <span class="nf">setTranslation</span><span class="p">:</span><span class="n">CGPointMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="nf">inView</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">];</span>
+
+        <span class="c1">// 拖拽动作结束
+</span>        <span class="k">if</span><span class="p">(</span><span class="n">recognizer</span><span class="p">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">UIGestureRecognizerStateEnded</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="c1">// 计算出移动的速度
+</span>            <span class="n">CGPoint</span> <span class="n">velocity</span> <span class="o">=</span> <span class="p">[</span><span class="n">recognizer</span> <span class="nf">velocityInView</span><span class="p">:</span><span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">];</span>
+
+            <span class="c1">// 衰退减速动画
+</span>            <span class="n">POPDecayAnimation</span> <span class="o">*</span><span class="n">positionAnimation</span> <span class="o">=</span> \
+        <span class="p">[</span><span class="n">POPDecayAnimation</span> <span class="nf">animationWithPropertyNamed</span><span class="p">:</span><span class="n">kPOPLayerPosition</span><span class="p">];</span>
+
+            <span class="c1">// 设置代理
+</span>            <span class="n">positionAnimation</span><span class="p">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+
+            <span class="c1">// 设置速度动画
+</span>            <span class="n">positionAnimation</span><span class="p">.</span><span class="n">velocity</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSValue</span> <span class="nf">valueWithCGPoint</span><span class="p">:</span><span class="n">velocity</span><span class="p">];</span>
+
+            <span class="c1">// 添加动画
+</span>            <span class="p">[</span><span class="n">recognizer</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">layer</span> <span class="nf">pop_addAnimation</span><span class="p">:</span><span class="n">positionAnimation</span>
+                                         <span class="nf">forKey</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">@end</span>
+</code></pre></div> <ul> <li>3.对拖拽对象添加了pan手势，根据手势的位置移动拖拽对象，recognizer.view.center = CGPointMake(recognizer.view.center.x + translation.x,recognizer.view.center.y + translation.y)之后要清零相对位置，即调用[recognizer setTranslation:CGPointMake(0, 0) inView:self.view]。在拖拽动作结束的时候，计算出相对速度设置给衰减动画对象。</li> </ul> <h2 id="基本动画效果">基本动画效果</h2> <ul> <li>1.基本动画效果如下:</li> </ul> <p><img src="http://img.blog.csdn.net/20161202093400965" alt="这里写图片描述" /></p> <ul> <li>2.代码如下:</li> </ul> <div class="language-objc highlighter-rouge"><pre class="highlight"><code>   <span class="cp">#import "ViewController.h"
+</span>    <span class="cp">#import &lt;POP.h&gt;
+</span>
+    <span class="k">@interface</span> <span class="nc">ViewController</span> <span class="p">()</span>
+
+    <span class="k">@end</span>
+
+    <span class="k">@implementation</span> <span class="nc">ViewController</span>
+
+    <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span>
+    <span class="p">{</span>
+        <span class="p">[</span><span class="n">super</span> <span class="nf">viewDidLoad</span><span class="p">];</span>
+
+        <span class="c1">// 创建view
+</span>        <span class="n">UIView</span> <span class="o">*</span><span class="n">showView</span>            <span class="o">=</span> <span class="p">[[</span><span class="n">UIView</span> <span class="nf">alloc</span><span class="p">]</span> <span class="nf">initWithFrame</span><span class="p">:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)];</span>
+        <span class="n">showView</span><span class="p">.</span><span class="n">alpha</span>              <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="n">f</span><span class="p">;</span>
+        <span class="n">showView</span><span class="p">.</span><span class="n">layer</span><span class="p">.</span><span class="n">cornerRadius</span> <span class="o">=</span> <span class="mi">50</span><span class="p">.</span><span class="n">f</span><span class="p">;</span>
+        <span class="n">showView</span><span class="p">.</span><span class="n">center</span>             <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">center</span><span class="p">;</span>
+        <span class="n">showView</span><span class="p">.</span><span class="n">backgroundColor</span>    <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="nf">cyanColor</span><span class="p">];</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">showView</span><span class="p">];</span>
+
+        <span class="c1">// 执行基本动画效果
+</span>        <span class="n">POPBasicAnimation</span> <span class="o">*</span><span class="n">anim</span> <span class="o">=</span> <span class="p">[</span><span class="n">POPBasicAnimation</span> <span class="nf">animationWithPropertyNamed</span><span class="p">:</span><span class="n">kPOPViewAlpha</span><span class="p">];</span>
+        <span class="n">anim</span><span class="p">.</span><span class="n">timingFunction</span>     <span class="o">=</span> <span class="p">[</span><span class="n">CAMediaTimingFunction</span> <span class="nf">functionWithName</span><span class="p">:</span><span class="n">kCAMediaTimingFunctionEaseInEaseOut</span><span class="p">];</span>
+        <span class="n">anim</span><span class="p">.</span><span class="n">fromValue</span>          <span class="o">=</span> <span class="err">@</span><span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">0</span><span class="p">);</span>
+        <span class="n">anim</span><span class="p">.</span><span class="n">toValue</span>            <span class="o">=</span> <span class="err">@</span><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="mi">0</span><span class="p">);</span>
+        <span class="n">anim</span><span class="p">.</span><span class="n">duration</span>           <span class="o">=</span> <span class="mi">4</span><span class="p">.</span><span class="n">f</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">showView</span> <span class="nf">pop_addAnimation</span><span class="p">:</span><span class="n">anim</span> <span class="nf">forKey</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="k">@end</span>
+</code></pre></div> <ul> <li>3.基本动画对象只需要设置起始值(fromValue)和最终值(toValue)以及持续时间(duration)就可以了。</li> </ul> <h2 id="pop动画综合实战">POP动画综合实战</h2> <ul> <li>1.动画效果如下：</li> </ul> <p><img src="http://img.blog.csdn.net/20161202190749458" alt="这里写图片描述" /></p> <ul> <li>2.点击中间红色按钮，6个按钮从上面坠落。点击取消，6个按钮又从上边掉下消失。代码实现如下：</li> </ul> <div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="cp">#import "BSPublishController.h"
+#import "BSVerticalButton.h"
+#import &lt;POP.h&gt;
+</span>
+<span class="k">@interface</span> <span class="nc">BSPublishController</span> <span class="p">()</span>
+<span class="k">@property</span><span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span><span class="n">weak</span><span class="p">)</span><span class="n">UIImageView</span> <span class="o">*</span><span class="n">sloganView</span><span class="p">;</span>
+<span class="k">@end</span>
+
+<span class="k">@implementation</span> <span class="nc">BSPublishController</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">super</span> <span class="nf">viewDidLoad</span><span class="p">];</span>
+    <span class="c1">//添加6个按钮
+</span>    <span class="n">NSArray</span> <span class="o">*</span><span class="n">name</span> <span class="o">=</span> <span class="p">@[</span><span class="s">@"发视频"</span><span class="p">,</span><span class="s">@"发图片"</span><span class="p">,</span><span class="s">@"发段子"</span><span class="p">,</span><span class="s">@"发声音"</span><span class="p">,</span><span class="s">@"审帖"</span><span class="p">,</span><span class="s">@"离线下载"</span><span class="p">];</span>
+    <span class="n">NSArray</span> <span class="o">*</span><span class="n">imageName</span> <span class="o">=</span> <span class="p">@[</span><span class="s">@"publish-video"</span><span class="p">,</span><span class="s">@"publish-picture"</span><span class="p">,</span><span class="s">@"publish-text"</span><span class="p">,</span><span class="s">@"publish-audio"</span><span class="p">,</span><span class="s">@"publish-review"</span><span class="p">,</span><span class="s">@"publish-offline"</span><span class="p">];</span>
+    <span class="n">NSUInteger</span> <span class="n">count</span> <span class="o">=</span> <span class="n">name</span><span class="p">.</span><span class="n">count</span><span class="p">;</span>
+    <span class="n">NSUInteger</span> <span class="n">maxCols</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="n">CGFloat</span> <span class="n">buttonW</span> <span class="o">=</span> <span class="mi">72</span><span class="p">;</span>
+    <span class="n">CGFloat</span> <span class="n">buttonH</span> <span class="o">=</span> <span class="n">buttonW</span> <span class="o">+</span> <span class="mi">50</span><span class="p">;</span>
+    <span class="n">CGFloat</span> <span class="n">buttonStartX</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+    <span class="n">CGFloat</span> <span class="n">buttonStartY</span> <span class="o">=</span> <span class="p">(</span><span class="n">BSScreenH</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">buttonH</span><span class="p">)</span><span class="o">*</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">;</span>
+    <span class="n">CGFloat</span> <span class="n">buttonMargin</span> <span class="o">=</span> <span class="p">(</span><span class="n">BSScreenW</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">buttonStartX</span><span class="o">-</span><span class="n">buttonW</span><span class="o">*</span><span class="n">maxCols</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">maxCols</span><span class="o">-</span><span class="mi">1</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">NSUInteger</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">count</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">BSVerticalButton</span> <span class="o">*</span><span class="n">button</span> <span class="o">=</span> <span class="p">[[</span><span class="n">BSVerticalButton</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">init</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">button</span> <span class="nf">setImage</span><span class="p">:[</span><span class="n">UIImage</span> <span class="nf">imageNamed</span><span class="p">:</span><span class="n">imageName</span><span class="p">[</span><span class="nf">i</span><span class="p">]]</span> <span class="nf">forState</span><span class="p">:</span><span class="n">UIControlStateNormal</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">button</span> <span class="nf">setTitle</span><span class="p">:</span><span class="n">name</span><span class="p">[</span><span class="nf">i</span><span class="p">]</span> <span class="nf">forState</span><span class="p">:</span><span class="n">UIControlStateNormal</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">button</span> <span class="nf">setTitleColor</span><span class="p">:[</span><span class="n">UIColor</span> <span class="nf">blackColor</span><span class="p">]</span> <span class="nf">forState</span><span class="p">:</span><span class="n">UIControlStateNormal</span><span class="p">];</span>
+        <span class="n">button</span><span class="p">.</span><span class="n">titleLabel</span><span class="p">.</span><span class="n">font</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIFont</span> <span class="nf">systemFontOfSize</span><span class="p">:</span><span class="mi">14</span><span class="p">];</span>
+        <span class="n">button</span><span class="p">.</span><span class="n">tag</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">button</span> <span class="nf">addTarget</span><span class="p">:</span><span class="n">self</span> <span class="nf">action</span><span class="p">:</span><span class="k">@selector</span><span class="p">(</span><span class="n">btnClick</span><span class="o">:</span><span class="p">)</span> <span class="n">forControlEvents</span><span class="o">:</span><span class="n">UIControlEventTouchUpInside</span><span class="p">];</span>
+        <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">button</span><span class="p">];</span>
+        <span class="c1">//计算frame
+</span>        <span class="n">NSUInteger</span> <span class="n">row</span> <span class="o">=</span> <span class="n">i</span><span class="o">/</span><span class="n">maxCols</span><span class="p">;</span>
+        <span class="n">NSUInteger</span> <span class="n">col</span> <span class="o">=</span> <span class="n">i</span><span class="o">%</span><span class="n">maxCols</span><span class="p">;</span>
+        <span class="n">CGFloat</span> <span class="n">buttonX</span> <span class="o">=</span> <span class="n">buttonStartX</span> <span class="o">+</span> <span class="n">col</span><span class="o">*</span><span class="p">(</span><span class="n">buttonW</span><span class="o">+</span><span class="n">buttonMargin</span><span class="p">);</span>
+        <span class="n">CGFloat</span> <span class="n">buttonY</span> <span class="o">=</span> <span class="n">buttonStartY</span> <span class="o">+</span> <span class="n">row</span><span class="o">*</span><span class="n">buttonH</span><span class="p">;</span>
+        <span class="c1">//使用pop框架，改变frame往下掉,而且不需要再设置frame了，因为pop改变了frame
+</span>        <span class="n">POPSpringAnimation</span> <span class="o">*</span><span class="n">anim</span> <span class="o">=</span> <span class="p">[</span><span class="n">POPSpringAnimation</span> <span class="nf">animationWithPropertyNamed</span><span class="p">:</span><span class="n">kPOPViewFrame</span><span class="p">];</span>
+        <span class="n">anim</span><span class="p">.</span><span class="n">fromValue</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSValue</span> <span class="nf">valueWithCGRect</span><span class="p">:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="n">buttonX</span><span class="p">,</span> <span class="n">buttonY</span><span class="o">-</span><span class="n">BSScreenH</span><span class="p">,</span> <span class="n">buttonW</span><span class="p">,</span> <span class="n">buttonH</span><span class="p">)];</span>
+        <span class="n">anim</span><span class="p">.</span><span class="n">toValue</span>   <span class="o">=</span> <span class="p">[</span><span class="n">NSValue</span> <span class="nf">valueWithCGRect</span><span class="p">:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="n">buttonX</span><span class="p">,</span> <span class="n">buttonY</span><span class="p">,</span> <span class="n">buttonW</span><span class="p">,</span> <span class="n">buttonH</span><span class="p">)];</span>
+        <span class="n">anim</span><span class="p">.</span><span class="n">springBounciness</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+        <span class="n">anim</span><span class="p">.</span><span class="n">springSpeed</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+        <span class="n">anim</span><span class="p">.</span><span class="n">beginTime</span> <span class="o">=</span> <span class="n">CACurrentMediaTime</span><span class="p">()</span><span class="o">+</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="o">*</span><span class="n">i</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">button</span> <span class="nf">pop_addAnimation</span><span class="p">:</span><span class="n">anim</span> <span class="nf">forKey</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+    <span class="p">}</span>
+    <span class="c1">//添加顶部图片
+</span>    <span class="n">UIImageView</span> <span class="o">*</span><span class="n">slogan</span> <span class="o">=</span> <span class="p">[[</span><span class="n">UIImageView</span> <span class="nf">alloc</span><span class="p">]</span><span class="nf">initWithImage</span><span class="p">:[</span><span class="n">UIImage</span> <span class="nf">imageNamed</span><span class="p">:</span><span class="s">@"app_slogan"</span><span class="p">]];</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">sloganView</span> <span class="o">=</span> <span class="n">slogan</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nf">addSubview</span><span class="p">:</span><span class="n">slogan</span><span class="p">];</span>
+    <span class="c1">//中心约束
+</span>    <span class="n">POPSpringAnimation</span> <span class="o">*</span><span class="n">anim</span> <span class="o">=</span> <span class="p">[</span><span class="n">POPSpringAnimation</span> <span class="nf">animationWithPropertyNamed</span><span class="p">:</span><span class="n">kPOPViewCenter</span><span class="p">];</span>
+    <span class="n">anim</span><span class="p">.</span><span class="n">fromValue</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSValue</span> <span class="nf">valueWithCGPoint</span><span class="p">:</span><span class="n">CGPointMake</span><span class="p">(</span><span class="n">BSScreenW</span><span class="o">*</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="n">BSScreenH</span><span class="o">*</span><span class="mi">0</span><span class="p">.</span><span class="mi">2</span><span class="o">-</span><span class="n">BSScreenH</span><span class="p">)];</span>
+    <span class="n">anim</span><span class="p">.</span><span class="n">toValue</span>   <span class="o">=</span> <span class="p">[</span><span class="n">NSValue</span> <span class="nf">valueWithCGPoint</span><span class="p">:</span><span class="n">CGPointMake</span><span class="p">(</span><span class="n">BSScreenW</span><span class="o">*</span><span class="mi">0</span><span class="p">.</span><span class="mi">5</span><span class="p">,</span> <span class="n">BSScreenH</span><span class="o">*</span><span class="mi">0</span><span class="p">.</span><span class="mi">2</span><span class="p">)];</span>
+    <span class="n">anim</span><span class="p">.</span><span class="n">springBounciness</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="n">anim</span><span class="p">.</span><span class="n">springSpeed</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+    <span class="n">anim</span><span class="p">.</span><span class="n">beginTime</span> <span class="o">=</span> <span class="n">CACurrentMediaTime</span><span class="p">()</span><span class="o">+</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="o">*</span><span class="n">count</span><span class="p">;</span>
+    <span class="p">[</span><span class="n">slogan</span> <span class="nf">pop_addAnimation</span><span class="p">:</span><span class="n">anim</span> <span class="nf">forKey</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+
+<span class="p">}</span>
+</code></pre></div> <p>上面没有单独设置按钮的frame,而是在pop对象的属性(fromValue和toValue)里进行了设置。这里重写了Button按钮，重写的代码如下:</p> <div class="language-objc highlighter-rouge"><pre class="highlight"><code><span class="cp">#import "BSVerticalButton.h"
+</span>
+<span class="k">@implementation</span> <span class="nc">BSVerticalButton</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="n">instancetype</span><span class="p">)</span><span class="nf">initWithFrame</span><span class="p">:(</span><span class="n">CGRect</span><span class="p">)</span><span class="nv">frame</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">self</span> <span class="o">==</span> <span class="p">[</span><span class="n">super</span> <span class="nf">initWithFrame</span><span class="p">:</span><span class="n">frame</span><span class="p">])</span> <span class="p">{</span>
+        <span class="n">self</span><span class="p">.</span><span class="n">titleLabel</span><span class="p">.</span><span class="n">textAlignment</span> <span class="o">=</span> <span class="n">NSTextAlignmentCenter</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">awakeFromNib</span> <span class="p">{</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">titleLabel</span><span class="p">.</span><span class="n">textAlignment</span> <span class="o">=</span> <span class="n">NSTextAlignmentCenter</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//这个是控件重新布局，所以要调用layoutSubviews，而修改控件大小，是调用setFrame
+</span><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">layoutSubviews</span> <span class="p">{</span>
+
+    <span class="p">[</span><span class="n">super</span> <span class="nf">layoutSubviews</span><span class="p">];</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">imageView</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">imageView</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">imageView</span><span class="p">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">width</span><span class="p">;</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">imageView</span><span class="p">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">imageView</span><span class="p">.</span><span class="n">width</span><span class="p">;</span>
+    
+    <span class="n">self</span><span class="p">.</span><span class="n">titleLabel</span><span class="p">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">titleLabel</span><span class="p">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">imageView</span><span class="p">.</span><span class="n">height</span><span class="p">;</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">titleLabel</span><span class="p">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">width</span><span class="p">;</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">titleLabel</span><span class="p">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">self</span><span class="p">.</span><span class="n">width</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">setFrame</span><span class="o">:</span><span class="p">(</span><span class="n">CGRect</span><span class="p">)</span><span class="n">frame</span> <span class="p">{</span>
+    <span class="p">[</span><span class="n">super</span> <span class="nf">setFrame</span><span class="p">:</span><span class="n">frame</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="k">@end</span>
+</code></pre></div> <p>点击取消6个按钮从上面掉下来，代码如下:</p> <div class="language-objc highlighter-rouge"><pre class="highlight"><code>   <span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">cancel</span><span class="p">:(</span><span class="kt">void</span><span class="p">(</span><span class="o">^</span><span class="p">)(</span><span class="kt">int</span><span class="p">))</span><span class="nv">completeion</span><span class="p">{</span>
+    <span class="c1">//让按钮往下掉
+</span>    <span class="n">NSUInteger</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="n">NSUInteger</span> <span class="n">count</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">subviews</span><span class="p">.</span><span class="n">count</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="n">NSUInteger</span> <span class="n">i</span> <span class="o">=</span> <span class="n">index</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">count</span> <span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">UIView</span> <span class="o">*</span><span class="n">subview</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">view</span><span class="p">.</span><span class="n">subviews</span><span class="p">[</span><span class="nf">i</span><span class="p">];</span>
+        <span class="c1">//这里不需要计算frame，因为已经添加到view中，只需要设置最后的位置
+</span>        <span class="n">POPBasicAnimation</span> <span class="o">*</span><span class="n">anim</span> <span class="o">=</span> <span class="p">[</span><span class="n">POPBasicAnimation</span> <span class="nf">animationWithPropertyNamed</span><span class="p">:</span><span class="n">kPOPViewCenter</span><span class="p">];</span>
+        <span class="n">anim</span><span class="p">.</span><span class="n">toValue</span>  <span class="o">=</span> <span class="p">[</span><span class="n">NSValue</span> <span class="nf">valueWithCGPoint</span><span class="p">:</span><span class="n">CGPointMake</span><span class="p">(</span><span class="n">subview</span><span class="p">.</span><span class="n">centerX</span><span class="p">,</span> <span class="n">subview</span><span class="p">.</span><span class="n">centerY</span><span class="o">+</span><span class="n">BSScreenH</span><span class="p">)];</span>
+        <span class="n">anim</span><span class="p">.</span><span class="n">beginTime</span> <span class="o">=</span> <span class="n">CACurrentMediaTime</span><span class="p">()</span><span class="o">+</span><span class="mi">0</span><span class="p">.</span><span class="mi">1</span><span class="o">*</span><span class="n">i</span><span class="p">;</span>
+        <span class="p">[</span><span class="n">subview</span> <span class="nf">pop_addAnimation</span><span class="p">:</span><span class="n">anim</span> <span class="nf">forKey</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">count</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">//最后一个控件pop完退出控制器，写在外面会直接退出
+</span>            <span class="p">[</span><span class="n">anim</span> <span class="nf">setCompletionBlock</span><span class="p">:</span><span class="o">^</span><span class="p">(</span><span class="n">POPAnimation</span> <span class="o">*</span><span class="n">anim</span><span class="p">,</span> <span class="n">BOOL</span> <span class="n">finished</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">completeion</span><span class="p">)</span> <span class="p">{</span>
+                    
+                <span class="p">}</span>
+                <span class="p">[</span><span class="n">self</span> <span class="nf">dismissViewControllerAnimated</span><span class="p">:</span><span class="nb">NO</span> <span class="nf">completion</span><span class="p">:</span><span class="nb">nil</span><span class="p">];</span>
+            <span class="p">}];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div> </div> </article> <footer class="site-footer"> <div class="container"> <ul class="social"> <li><a href="http://github.com/answershuto" target="_blank"><i class="icon icon-github"></i></a></li> </ul> <p> <br><small>&copy;2017 ZhangShu , All rights reserved.</small> </p> </div> </footer> </main> <script src="/assets/js/jquery-2.1.1.js"></script> <script src="/assets/js/main.js"></script> </body> </html><!-- by nandomoreira.me -->
