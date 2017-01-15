@@ -5,9 +5,124 @@
     <description></description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Sun, 15 Jan 2017 20:10:25 +0800</pubDate>
-    <lastBuildDate>Sun, 15 Jan 2017 20:10:25 +0800</lastBuildDate>
+    <pubDate>Sun, 15 Jan 2017 20:31:04 +0800</pubDate>
+    <lastBuildDate>Sun, 15 Jan 2017 20:31:04 +0800</lastBuildDate>
     <generator>Jekyll v3.3.1</generator>
+    
+      <item>
+        <title>高德地图API展示Scrapy爬取的链家网房源</title>
+        <description>&lt;h2 id=&quot;1代码链接&quot;&gt;1.代码链接&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/happyte/buyhouse&quot;&gt;https://github.com/happyte/buyhouse&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;2最终效果图&quot;&gt;2.最终效果图&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Scrapy/1.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Scrapy/2.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Scrapy/3.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/Scrapy/4.png&quot; alt=&quot;img&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;3实现思路&quot;&gt;3.实现思路&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;1.爬取的是链家网的成都地区的新房源，爬出房源的名字、价格、地址和url这四个。我是基于python的scrapy实现爬虫的。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;2.在终端安装scrapy,使用命令pip install scrapy,安装完后新建项目scrapy startproject fangjia。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;3.明确需要爬取的数据，在items.py文件中写入需要爬取的数据。在scrapy中，Item是用来抓取内容的容器，类似python中的字典&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;scrapy&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;FangjiaItem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scrapy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;FANGJIA_ADDRESS&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scrapy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Field&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;    &lt;span class=&quot;c&quot;&gt;# 住房地址&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;FANGJIA_NAME&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scrapy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Field&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;       &lt;span class=&quot;c&quot;&gt;# 名字&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;FANGJIA_PRICE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scrapy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Field&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;      &lt;span class=&quot;c&quot;&gt;# 房价&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;FANGJIA_URL&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scrapy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Field&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;        &lt;span class=&quot;c&quot;&gt;# 房源url&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;ul&gt;
+  &lt;li&gt;4.下面分析下网页，来到成都房源的首页，一共有19个分页，分页的url例如http://cd.fang.lianjia.com/loupan/nht1/，最后一个数字代表页数。查看网页源代码如下:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;http://img.blog.csdn.net/20161227205350218?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDc0NTMyNA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;这里写图片描述&quot; /&gt;
+可以直接在该网页抓取我们想要的房名、地址、价格和url。我的方法是先抓取url,再进入具体网页抓取想要的数据。从上图可以看到a标签的&lt;code class=&quot;highlighter-rouge&quot;&gt;href=&quot;/loupan/p_chaygceqaausi/&quot;&lt;/code&gt; 即为我们想要的相对路径，拼接&lt;code class=&quot;highlighter-rouge&quot;&gt;http://cd.fang.lianjia.com&lt;/code&gt; 成&lt;code class=&quot;highlighter-rouge&quot;&gt;http://cd.fang.lianjia.com/loupan/p_chaygceqaausi/&lt;/code&gt; 即为我们需要的url。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;5.使用xpath抓取上面的a标签中的href，&lt;code class=&quot;highlighter-rouge&quot;&gt;fang_links = response.xpath('//div[@class=&quot;list-wrap&quot;]/ul[@id=&quot;house-lst&quot;]/li/div[@class=&quot;pic-panel&quot;]/a/@href').extract()&lt;/code&gt; 抓取一个页面的所有的url集合，遍历上面的集合，请求具体页面。&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;6.来到一个具体页面分析，抓取我们要的数据标签位置&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;房源名字
+&lt;img src=&quot;http://img.blog.csdn.net/20161227210346122?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDc0NTMyNA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;这里写图片描述&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;房源单价
+ &lt;img src=&quot;http://img.blog.csdn.net/20161227210857794?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDc0NTMyNA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;这里写图片描述&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;房源地址
+ &lt;img src=&quot;http://img.blog.csdn.net/20161227210937160?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvdTAxMDc0NTMyNA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast&quot; alt=&quot;这里写图片描述&quot; /&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;抓取的代码如下:&lt;/p&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'//div[@class=&quot;name-box&quot;]/a/@title'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;extract&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'//div[@class=&quot;name-box&quot;]/a/@href'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;extract&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;price&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'//p[@class=&quot;jiage&quot;]/span[@class=&quot;junjia&quot;]/text()'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;extract&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;address&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;xpath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'//p[@class=&quot;where&quot;]/span/@title'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;extract&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;7.把上面抓取的数据放入item中，创建一个items.py定义的FangjiaItem类对象，最终输出这个对象item&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'FANGJIA_NAME'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'FANGJIA_ADDRESS'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;address&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'FANGJIA_PRICE'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;price&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'FANGJIA_URL'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;'http://cd.fang.lianjia.com'&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;yield&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;8.在scrapy工程的settings.py文件中要设置如下代码:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;ITEM_PIPELINES&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;s&quot;&gt;'fangjia.pipelines.FangjiaPipeline'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;高德地图api调用&quot;&gt;高德地图API调用&lt;/h2&gt;
+
+&lt;p&gt;采用高德地图对房源进行可视化操作，在工程根目录下创建demo.html文件，页面大框架可直接从示例中心复制：高德 JavaScript API 示例中心&lt;a href=&quot;http://lbs.amap.com/api/javascript-api/example/map/map-show/&quot;&gt;http://lbs.amap.com/api/javascript-api/example/map/map-show/&lt;/a&gt;。具体可以看我仓库中的demo.html文件。&lt;/p&gt;
+</description>
+        <pubDate>Sun, 25 Dec 2016 10:52:00 +0800</pubDate>
+        <link>http://localhost:4000/jekyll/update/2016/12/25/Scrapy%E7%88%AC%E5%8F%96%E9%93%BE%E5%AE%B6%E7%BD%91%E6%88%BF%E6%BA%90-%E9%AB%98%E5%BE%B7API%E5%9C%B0%E5%9B%BE%E5%B1%95%E7%A4%BA.html</link>
+        <guid isPermaLink="true">http://localhost:4000/jekyll/update/2016/12/25/Scrapy%E7%88%AC%E5%8F%96%E9%93%BE%E5%AE%B6%E7%BD%91%E6%88%BF%E6%BA%90-%E9%AB%98%E5%BE%B7API%E5%9C%B0%E5%9B%BE%E5%B1%95%E7%A4%BA.html</guid>
+        
+        <category>Python</category>
+        
+        
+        <category>jekyll</category>
+        
+        <category>update</category>
+        
+      </item>
     
       <item>
         <title>Python微信飞机大战</title>
