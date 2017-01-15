@@ -1,0 +1,14 @@
+---
+layout: post
+title:  "Python微信飞机大战"
+date:   2017-01-14 20:52:00 +0800
+categories: jekyll update
+tags: [Python] 
+excerpt: pygame实现微信飞机大战
+---
+# 基础类的构建
+## 导弹类
+- 1.导弹是从飞机上发射的(无论是玩家的飞机还是敌机),导弹的位置需要根据飞机的位置确定，还需要根据是玩家飞机还是敌机确定导弹的图片名和发射方向，因此需要传入图片名和位置参数。
+```python
+class Bullet(object)
+```
