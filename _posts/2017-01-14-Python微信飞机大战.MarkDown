@@ -122,9 +122,8 @@ class Hero(Plane):
 ## 敌人飞机类
 
 - 1.敌人飞机类中还多了速度对象属性，考虑到随着游戏难度的增加，敌人飞机速度越来越快，这个参数需要外界传入。而且敌人飞机有小中大三种类型，是随机的，起始的位置x轴也是随机的，y轴固定从最上方开始。
- 
- ```python
- #定义敌人飞机类
+
+```python
 class Enemy(Plane):
 	"""docstring for Enemy"""
 	def __init__(self,speed):
@@ -138,7 +137,8 @@ class Enemy(Plane):
 		self.planeName = 'enemy'
 		self.direction = 'down'     #用英文表示
 		self.speed = speed          #移动速度,这个参数现在需要传入
- ```
+
+```		
 
 - 2.敌人的飞机不断往下掉，改变self.y,其实不用判断，direction没有用到
 
@@ -152,13 +152,13 @@ def move(self):
 
 - 1.GameInit类创建了几个类属性，g_enemyList列表用于存储敌人飞机对象，初始化玩家对象hero=object，object是元类，和用于统计玩家分数的属性score。
 
- ```python
+```python
    #类属性
    gameLevel = 1       #简单模式
    g_ememyList = []    #前面加上g类似全局变量
    score = 0           #用于统计分数
    hero = object
- ```
+```
 
 - 2.接下来定义了几个类方法和静态方法，用于封装功能，在主函数里调用的都是这些类方法和静态方法
 
@@ -205,7 +205,7 @@ def move(self):
 
  * 有3种类型的对象需要描绘，玩家飞机对象，敌人飞机对象和导弹，这个函数就是用来描绘这些对象，其中导弹和敌机需要判断哪些对象超出屏幕从列表中删除,这里用了del函数，记录下索引值并从列表中删除，同样也可以用pop函数,这里的j为索引值。
  
- ```python
+```python
  @classmethod
 	def draw(cls,screen):
 		delPlaneList = []
@@ -232,7 +232,7 @@ def move(self):
 		#删除加入到delBulletList中的导弹索引,是同步的
 		for m in delBulletList:
 			del cls.hero.bulletList[m]
- ```
+```
 
  * 玩家飞机对象发射子弹，同时也要判断打中了敌机就让敌机对象和和子弹对象同时从列表中删除。通过pygame.Rect(self.image.get_rect())获得矩形的值，但是只获得了图像的width和height两个属性，前两个属性left和top都为0，因此还需要设置这两个属性，然后通过collidetect判断两个矩形是否有相交处，其中索引值enemyIndex和bulletIndex需要仔细分析下
 

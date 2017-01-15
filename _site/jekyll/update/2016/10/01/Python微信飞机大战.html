@@ -56,8 +56,7 @@
 			<span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">-=</span> <span class="mi">50</span>
 		<span class="k">elif</span> <span class="n">keyValue</span> <span class="o">==</span> <span class="s">'down'</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="mi">50</span>
-</code></pre></div> <h2 id="敌人飞机类">敌人飞机类</h2> <ul> <li>1.敌人飞机类中还多了速度对象属性，考虑到随着游戏难度的增加，敌人飞机速度越来越快，这个参数需要外界传入。而且敌人飞机有小中大三种类型，是随机的，起始的位置x轴也是随机的，y轴固定从最上方开始。</li> </ul> <div class="language-python highlighter-rouge"><pre class="highlight"><code> <span class="c">#定义敌人飞机类</span>
-<span class="k">class</span> <span class="nc">Enemy</span><span class="p">(</span><span class="n">Plane</span><span class="p">):</span>
+</code></pre></div> <h2 id="敌人飞机类">敌人飞机类</h2> <ul> <li>1.敌人飞机类中还多了速度对象属性，考虑到随着游戏难度的增加，敌人飞机速度越来越快，这个参数需要外界传入。而且敌人飞机有小中大三种类型，是随机的，起始的位置x轴也是随机的，y轴固定从最上方开始。</li> </ul> <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Enemy</span><span class="p">(</span><span class="n">Plane</span><span class="p">):</span>
 	<span class="s">"""docstring for Enemy"""</span>
 	<span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">speed</span><span class="p">):</span>
 		<span class="nb">super</span><span class="p">(</span><span class="n">Enemy</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">()</span>
@@ -70,6 +69,7 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">planeName</span> <span class="o">=</span> <span class="s">'enemy'</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="s">'down'</span>     <span class="c">#用英文表示</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="n">speed</span>          <span class="c">#移动速度,这个参数现在需要传入</span>
+
 </code></pre></div> <ul> <li>2.敌人的飞机不断往下掉，改变self.y,其实不用判断，direction没有用到</li> </ul> <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">==</span> <span class="s">'down'</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span>     <span class="c">#飞机不断往下掉</span>
