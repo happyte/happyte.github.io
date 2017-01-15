@@ -1,16 +1,423 @@
 ---
 layout: post
 title:  "Python微信飞机大战"
-date:   2017-01-14 20:52:00 +0800
+date:   2016-10-01 20:52:00 +0800
 categories: jekyll update
 tags: [Python] 
 excerpt: pygame实现微信飞机大战
 ---
+
+
 # 基础类的构建
 
 ## 导弹类
 
 - 1.导弹是从飞机上发射的(无论是玩家的飞机还是敌机),导弹的位置需要根据飞机的位置确定，还需要根据是玩家飞机还是敌机确定导弹的图片名和发射方向，因此需要传入图片名和位置参数。
+
 ```python
-class Bullet(object)
+#定义导弹类
+class Bullet(object):
+	"""Bullet"""
+	def __init__(self, planeName,x,y):
+		if planeName == 'enemy':        #敌机导弹向下打
+			self.imageName = 'Resources/bullet-3.png'
+			self.direction = 'down'
+		elif planeName == 'hero':       #英雄飞机导弹向上打
+			self.imageName = 'Resources/bullet-1.png'
+			self.direction = 'up'
+		self.image = pygame.image.load(self.imageName).convert()
+		self.x = x
+		self.y = y
 ```
+
+pygame框架加载图片为图像函数为:`pygame.image.load(image).convert()`,传入的参数是图片的相对路径。
+
+- 2.描绘出导弹的位置，导弹并且需要在初始化的self.x和self.y基础上移动位置,位置是在屏幕上描绘的，需要传入屏幕参数。
+
+```python
+def draw(self,screen):
+		if self.direction == 'down':
+			self.y += 8
+		elif self.direction == 'up':
+			self.y -= 8
+		screen.blit(self.image,(self.x,self.y))
+```
+
+pygame显示图片函数为:
+
+```python
+   screen.blit(self.image,(self.x,self.y))
+   pygame.display.update()
+```
+第一个参数为加载的图像，第二个参数为左上角坐标。两个函数是配合使用的，需要第二个函数去刷新界面。
+
+## 飞机类
+
+- 1.Plane类是接下来要创建的玩家类Hero和敌机类Enemy的基类。基类把两者共同的属性和方法定义出来，方便子类继承。飞机要发射导弹，有一定的发射间隔，因此定义一个对象属性`self.bulletSleepTime`。还需要一个列表存储导弹，定义一个对象属性为空列表`self.bulletList`。
+
+```python
+#定义一个飞机基类		
+class Plane(object):
+	"""Plane"""
+	def __init__(self):
+		#导弹间隔发射时间1s
+		self.bulletSleepTime = 0.3
+		self.lastShootTime = time.time()
+		#存储导弹列表
+		self.bulletList = []
+```
+
+- 2.在初始化的时候我们定义了导弹的发射间隔时间，大于间隔时间的话我们就往定义的列表中添加导弹对象，因为我现在只想让玩家飞机发射子弹，因此初始化导弹对象特意往self.x加了36(是玩家飞机72x72图片宽度的一半)。让导弹在玩家飞机的正中间开始显示。
+
+```python
+def shoot(self):
+		if time.time()-self.lastShootTime>self.bulletSleepTime:
+			self.bulletList.append(Bullet(self.planeName,self.x+36,self.y))
+			self.lastShootTime = time.time()
+```
+
+- 3.描绘出飞机的位置
+
+```python
+#描绘飞机
+	def draw(self,screen):
+		screen.blit(self.image,(self.x,self.y))
+```
+
+# 继承类的构建
+
+## 玩家飞机类
+
+- 1.在飞机基类中我们定义了一些共同的对象属性，不同的对象属性有图像和原始位置，而且玩家飞机类对象还想拥有基类对象的属性，所以需要调用`Plane.__init__(self)`函数，通过这个函数就拥有了Plane基类的对象属性bulletSleepTime、lastShootTime、bulletList。
+
+```python
+#玩家飞机类，继承基类
+class Hero(Plane):
+	"""Hero"""
+	def __init__(self):
+		Plane.__init__(self)
+		planeImageName = 'Resources/hero.png'
+		self.image = pygame.image.load(planeImageName).convert()
+		#玩家原始位置
+		self.x = 200
+		self.y = 600
+		self.planeName = 'hero'
+```
+
+- 2.玩家飞机通过键盘的上下左右控制飞机的位置
+
+```python
+#键盘控制自己飞机
+	def keyHandle(self,keyValue):
+		if keyValue == 'left':
+			self.x -= 50
+		elif keyValue == 'right':
+			self.x += 50
+		elif keyValue == 'up':
+			self.y -= 50
+		elif keyValue == 'down':
+			self.y += 50
+```
+
+## 敌人飞机类
+
+- 1.敌人飞机类中还多了速度对象属性，考虑到随着游戏难度的增加，敌人飞机速度越来越快，这个参数需要外界传入。而且敌人飞机有小中大三种类型，是随机的，起始的位置x轴也是随机的，y轴固定从最上方开始。
+ 
+ ```python
+ #定义敌人飞机类
+class Enemy(Plane):
+	"""docstring for Enemy"""
+	def __init__(self,speed):
+		super(Enemy, self).__init__()
+		randomImageNum = random.randint(1,3)
+		planeImageName = 'Resources/enemy-' + str(randomImageNum) + '.png'
+		self.image = pygame.image.load(planeImageName).convert()
+		#敌人飞机原始位置
+		self.x = random.randint(20,400)    #敌机出现的位置任意
+		self.y = 0
+		self.planeName = 'enemy'
+		self.direction = 'down'     #用英文表示
+		self.speed = speed          #移动速度,这个参数现在需要传入
+ ```
+用到了随机数函数，需要导入random模块`random.randint(1,3)`。
+
+其中用到了`super(Enemy,self).__init__()`与玩家类中的`Plane.__init__(self)`效果是相同的。direction对象属性可以忽略,现在没有用到。
+
+- 2.敌人的飞机不断往下掉，改变self.y,其实不用判断，direction没有用到
+
+```python
+def move(self):
+		if self.direction == 'down':
+			self.y += self.speed     #飞机不断往下掉
+```		
+
+# 游戏初始化类(封装功能)
+
+- 1.GameInit类创建了几个类属性，`g_enemyList=[]`列表用于存储敌人飞机对象，初始化玩家对象`hero=object`，object是元类，和用于统计玩家分数的属性score
+
+ ```python
+   #类属性
+   gameLevel = 1       #简单模式
+   g_ememyList = []    #前面加上g类似全局变量
+   score = 0           #用于统计分数
+   hero = object
+ ```
+
+- 2.接下来定义了几个类方法和静态方法，用于封装功能，在主函数里调用的都是这些类方法和静态方法
+
+  * 往敌机列表中添加敌机对象,忽略下我的代码英语好像打错了
+
+```python
+@classmethod
+	def createEnemy(cls,speed):
+		cls.g_ememyList.append(Enemy(speed))
+```
+
+ * 创建玩家飞机对象
+
+```python
+@classmethod
+	def createHero(cls):
+		cls.hero = Hero()
+```
+
+ * 游戏初始化
+
+```python
+@classmethod
+	def gameInit(cls):
+		cls.createHero()
+```
+
+ * 玩家飞机对象处理键盘操作，在玩家飞机类中已经定义了键盘处理函数，这里再封装一层
+
+```python
+@classmethod
+	def heroPlaneKey(cls,keyValue):
+		cls.hero.keyHandle(keyValue)
+```
+
+ * 更新敌人飞机位置，敌人飞机对象都在`g_enemyList`列表中
+
+```python
+@classmethod
+	def setXY(cls):
+		for i in cls.g_ememyList:
+			i.move()
+```
+
+ * 有3种类型的对象需要描绘，玩家飞机对象，敌人飞机对象和导弹，这个函数就是用来描绘这些对象，其中导弹和敌机需要判断哪些对象超出屏幕从列表中删除,这里用了del函数，记录下索引值并从列表中删除，同样也可以用pop函数,这里的j为索引值
+ 
+ ```python
+ @classmethod
+	def draw(cls,screen):
+		delPlaneList = []
+		j = 0
+		for i in cls.g_ememyList:
+			i.draw(screen)   #画出敌机
+			#敌机超过屏幕就从列表中删除
+			if i.y > 680:
+				delPlaneList.append(j)
+			j += 1
+		for m in delPlaneList:
+			del cls.g_ememyList[m]
+
+
+		delBulletList = []
+		j = 0
+		cls.hero.draw(screen)    #画出英雄飞机位置
+		for i in cls.hero.bulletList:
+			#描绘英雄飞机的子弹，超出window从列表中删除
+			i.draw(screen)
+			if i.y < 0:
+				delBulletList.append(j)
+			j += 1
+		#删除加入到delBulletList中的导弹索引,是同步的
+		for m in delBulletList:
+			del cls.hero.bulletList[m]
+ ```
+
+ * 玩家飞机对象发射子弹，同时也要判断打中了敌机就让敌机对象和和子弹对象同时从列表中删除。通过`pygame.Rect(self.image.get_rect())`获得矩形的值，但是只获得了图像的width和height两个属性，前两个属性left和top都为0，因此还需要设置这两个属性，然后通过collidetect判断两个矩形是否有相交处，其中索引值enemyIndex和bulletIndex需要仔细分析下
+
+```python
+#自己飞机发射子弹
+	@classmethod
+	def shoot(cls):
+		cls.hero.shoot()
+		#子弹打到敌机让敌机从列表中消失
+		ememyIndex = 0
+		for i in cls.g_ememyList:
+			enemyRect = pygame.Rect(i.image.get_rect())
+			enemyRect.left = i.x
+			enemyRect.top  = i.y
+			bulletIndex = 0
+			for j in cls.hero.bulletList:
+				bulletRect = pygame.Rect(j.image.get_rect())
+				bulletRect.left = j.x
+				bulletRect.top  = j.y
+				if enemyRect.colliderect(bulletRect):
+					#判断敌机的宽度或者高度，来知道打中哪种类型的敌机
+					if enemyRect.width == 39:
+						cls.score += 1000     #小中大飞机分别100,500,1000分
+					elif enemyRect.width == 60:
+						cls.score += 5000
+					elif enemyRect.width == 78:
+						cls.score += 10000
+					cls.g_ememyList.pop(ememyIndex)        #敌机删除
+					cls.hero.bulletList.pop(bulletIndex)   #打中的子弹删除
+				bulletIndex += 1
+			ememyIndex += 1
+```
+
+ * 判断玩家飞机是否与敌机相撞判断游戏是否结束
+
+```python
+#判断游戏是否结束
+	@classmethod
+	def gameover(cls):
+		heroRect = pygame.Rect(cls.hero.image.get_rect())
+		heroRect.left = cls.hero.x
+		heroRect.top  = cls.hero.y
+		for i in cls.g_ememyList:
+			enemyRect = pygame.Rect(i.image.get_rect())
+			enemyRect.left = i.x
+			enemyRect.top  = i.y
+			if heroRect.colliderect(enemyRect):
+				return True
+		return False
+```
+
+- 3.几个静态方法，静态方法不需要cls这个参数,通过类和实例都可以调用
+
+ * 退出整个程序
+ 
+ ```python
+ @staticmethod
+	def terminate():
+		pygame.quit()
+		sys.exit(0)
+ ```
+
+ * 进入游戏后可以按space键停止游戏，其实就是就是个死循坏，按键按下后跳出函数
+
+```python
+@staticmethod
+	def pause(surface,image):
+		surface.blit(image,(0,0))
+		pygame.display.update()
+		while True:
+			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					cls.terminate()
+				elif event.type == pygame.KEYDOWN:
+					if event.key == K_SPACE:
+						return
+```
+
+ * 游戏开始后和结束后把分数显示出来,第一个参数是分数，第二个参数是通过pygame的字体库创建出来的，例如`font = pygame.font.SysFont(None,64)`,参数分别为字体样式和大小，可以选择字体样式例如arial、simsun(宋体)，第三个参数是屏幕，第四和第五个参数是字体显示的left和top值。
+
+```python
+@staticmethod
+	def drawText(text,font,surface,x,y):
+		#参数1：显示的内容 |参数2：是否开抗锯齿，True平滑一点|参数3：字体颜色|参数4：字体背景颜色
+		content = font.render(text,False,(10,100,200))
+		contentRect = content.get_rect()
+		contentRect.left = x
+		contentRect.top  = y
+		surface.blit(content,contentRect)  
+```
+
+
+# 主函数
+
+- 1.运行一个模块，有`if __name__ == 'main':`标识，会直接运行里面的代码。第一步初始化pygame库，调用`pygame.init()`,第二步创建一个窗口与背景图拍呢一样大:`screen = pygame.display.set_mode((ScreenWidth,ScreenHeight),0,32)`,然后可以设置窗口标题:`pygame.display.set_caption('飞机大战')`，第三步做一些初始化常量设置。其中纪录了游戏开始的时间，因为按照我的思想游戏开始后难度会逐渐增加，我是通过时间来增加难度的,启动时显示start图片，直到Enter键按下才进入游戏。
+
+```python
+if __name__ == '__main__':
+    #初始化pygame
+    pygame.init()
+    #创建一个窗口与背景图片一样大
+    ScreenWidth,ScreenHeight = 460,680
+    easyEnemySleepTime = 1      #简单模式下每隔1s创建新的敌机
+    middleEnemySleepTime = 0.5 
+    hardEnemySleepTime = 0.25
+    lastEnemyTime  = 0
+    screen = pygame.display.set_mode((ScreenWidth,ScreenHeight),0,32)
+    pygame.display.set_caption('飞机大战')
+    #参数1：字体类型，例如"arial"  参数2：字体大小
+    font  = pygame.font.SysFont(None,64)
+    font1 = pygame.font.SysFont("arial",24)
+    #记录游戏开始的时间
+    startTime = time.time()
+    #背景图片加载并转换成图像
+    background = pygame.image.load("Resources/bg_01.png").convert()   #背景图片
+    gameover = pygame.image.load("Resources/gameover.png").convert()  #游戏结束图片
+    start = pygame.image.load("Resources/startone.png")               #游戏开始图片
+    gamePauseIcon = pygame.image.load("Resources/Pause.png")
+    gameStartIcon = pygame.image.load("Resources/Start.png")
+    screen.blit(start,(0,0))
+    pygame.display.update()       #开始显示启动图片，直到有Enter键按下才会开始
+    GameInit.waitForKeyPress()
+    #初始化
+    GameInit.gameInit()
+```
+
+
+- 2.进入while循坏后，调用游戏初始化类封装好的函数，通过时间间隔interval选定游戏困难模式，通过改变敌机刷新的时间和敌机的速度增加难度，游戏结束后，再次按下Enter按键退出程序。这里存在一个bug,一旦游戏进行过程中按下Space暂停游戏，interval时间间隔仍然再计算(按道理应该让时间暂停)，再次按下Space恢复游戏后，当前模式设定时间减少了或者进入更困难模式了。
+
+```python
+while True:
+    	screen.blit(background,(0,0))    #不断覆盖，否则在背景上的图片会重叠
+    	screen.blit(gameStartIcon,(0,0))
+    	GameInit.drawText('score:%s' % (GameInit.score),font1,screen,80,15)
+    	for event in pygame.event.get():
+    		#print(event.type)
+    		if event.type == pygame.QUIT:
+    			GameInit.terminate()
+    		elif event.type == KEYDOWN:
+    			if event.key == K_LEFT:
+    				GameInit.heroPlaneKey('left')
+    			elif event.key == K_RIGHT:
+    				GameInit.heroPlaneKey('right')
+    			elif event.key == K_UP:
+    				GameInit.heroPlaneKey('up')
+    			elif event.key == K_DOWN:
+    				GameInit.heroPlaneKey('down')
+    			elif event.key == K_SPACE:
+    				GameInit.pause(screen,gamePauseIcon) #难度选择方面有bug.因为时间一直继续
+    	interval = time.time() - startTime
+    	# easy模式
+    	if interval < 10:
+    		if time.time() - lastEnemyTime >= easyEnemySleepTime:
+    			GameInit.createEnemy(5)   #传入的参数是speed
+    			lastEnemyTime = time.time()
+    	# middle模式
+    	elif interval >= 10 and interval < 30:
+    		if time.time() - lastEnemyTime >= middleEnemySleepTime:
+    			GameInit.createEnemy(10)
+    			lastEnemyTime = time.time()
+    	# hard模式
+    	elif interval >= 30:
+    		if time.time() - lastEnemyTime >= hardEnemySleepTime:
+    			GameInit.createEnemy(13)
+    			lastEnemyTime = time.time()
+    	GameInit.shoot()
+    	GameInit.setXY()
+    	GameInit.draw(screen)    #描绘类的位置
+    	pygame.display.update()  #不断更新图片
+    	if GameInit.gameover():
+    		time.sleep(1)        #睡1s时间,让玩家看到与敌机相撞的画面
+    		screen.blit(gameover,(0,0))
+    		GameInit.drawText('%s' % (GameInit.score),font,screen,170,400)
+    		pygame.display.update()
+    		GameInit.waitForKeyPress()
+    		break
+```
+
+## 总结
+
+- 1.我用的版本是python3.5,不知道为什么无法导入音乐，提示我打不开音乐文件，目前还没试过其它版本，猜测是否是因为版本的原因
+
+- 2.接下来修复bug,目前完成了基本功能，下一步加入敌机爆炸效果和大型敌机是需要好几发子弹才能击毁
+
+
