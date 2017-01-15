@@ -139,9 +139,6 @@ class Enemy(Plane):
 		self.direction = 'down'     #用英文表示
 		self.speed = speed          #移动速度,这个参数现在需要传入
  ```
-用到了随机数函数，需要导入random模块`random.randint(1,3)`。
-
-其中用到了`super(Enemy,self).__init__()`与玩家类中的`Plane.__init__(self)`效果是相同的。direction对象属性可以忽略,现在没有用到。
 
 - 2.敌人的飞机不断往下掉，改变self.y,其实不用判断，direction没有用到
 
@@ -153,7 +150,7 @@ def move(self):
 
 # 游戏初始化类(封装功能)
 
-- 1.GameInit类创建了几个类属性，`g_enemyList=[]`列表用于存储敌人飞机对象，初始化玩家对象`hero=object`，object是元类，和用于统计玩家分数的属性score
+- 1.GameInit类创建了几个类属性，g_enemyList列表用于存储敌人飞机对象，初始化玩家对象hero=object，object是元类，和用于统计玩家分数的属性score。
 
  ```python
    #类属性
@@ -206,7 +203,7 @@ def move(self):
 			i.move()
 ```
 
- * 有3种类型的对象需要描绘，玩家飞机对象，敌人飞机对象和导弹，这个函数就是用来描绘这些对象，其中导弹和敌机需要判断哪些对象超出屏幕从列表中删除,这里用了del函数，记录下索引值并从列表中删除，同样也可以用pop函数,这里的j为索引值
+ * 有3种类型的对象需要描绘，玩家飞机对象，敌人飞机对象和导弹，这个函数就是用来描绘这些对象，其中导弹和敌机需要判断哪些对象超出屏幕从列表中删除,这里用了del函数，记录下索引值并从列表中删除，同样也可以用pop函数,这里的j为索引值。
  
  ```python
  @classmethod
@@ -237,7 +234,7 @@ def move(self):
 			del cls.hero.bulletList[m]
  ```
 
- * 玩家飞机对象发射子弹，同时也要判断打中了敌机就让敌机对象和和子弹对象同时从列表中删除。通过`pygame.Rect(self.image.get_rect())`获得矩形的值，但是只获得了图像的width和height两个属性，前两个属性left和top都为0，因此还需要设置这两个属性，然后通过collidetect判断两个矩形是否有相交处，其中索引值enemyIndex和bulletIndex需要仔细分析下
+ * 玩家飞机对象发射子弹，同时也要判断打中了敌机就让敌机对象和和子弹对象同时从列表中删除。通过pygame.Rect(self.image.get_rect())获得矩形的值，但是只获得了图像的width和height两个属性，前两个属性left和top都为0，因此还需要设置这两个属性，然后通过collidetect判断两个矩形是否有相交处，其中索引值enemyIndex和bulletIndex需要仔细分析下
 
 ```python
 #自己飞机发射子弹

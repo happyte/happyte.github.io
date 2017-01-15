@@ -70,10 +70,10 @@
 		<span class="bp">self</span><span class="o">.</span><span class="n">planeName</span> <span class="o">=</span> <span class="s">'enemy'</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="s">'down'</span>     <span class="c">#用英文表示</span>
 		<span class="bp">self</span><span class="o">.</span><span class="n">speed</span> <span class="o">=</span> <span class="n">speed</span>          <span class="c">#移动速度,这个参数现在需要传入</span>
-</code></pre></div> <p>用到了随机数函数，需要导入random模块<code class="highlighter-rouge">random.randint(1,3)</code>。</p> <p>其中用到了<code class="highlighter-rouge">super(Enemy,self).__init__()</code>与玩家类中的<code class="highlighter-rouge">Plane.__init__(self)</code>效果是相同的。direction对象属性可以忽略,现在没有用到。</p> <ul> <li>2.敌人的飞机不断往下掉，改变self.y,其实不用判断，direction没有用到</li> </ul> <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</code></pre></div> <ul> <li>2.敌人的飞机不断往下掉，改变self.y,其实不用判断，direction没有用到</li> </ul> <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 		<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">==</span> <span class="s">'down'</span><span class="p">:</span>
 			<span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">speed</span>     <span class="c">#飞机不断往下掉</span>
-</code></pre></div> <h1 id="游戏初始化类封装功能">游戏初始化类(封装功能)</h1> <ul> <li>1.GameInit类创建了几个类属性，<code class="highlighter-rouge">g_enemyList=[]</code>列表用于存储敌人飞机对象，初始化玩家对象<code class="highlighter-rouge">hero=object</code>，object是元类，和用于统计玩家分数的属性score</li> </ul> <div class="language-python highlighter-rouge"><pre class="highlight"><code>   <span class="c">#类属性</span>
+</code></pre></div> <h1 id="游戏初始化类封装功能">游戏初始化类(封装功能)</h1> <ul> <li>1.GameInit类创建了几个类属性，g_enemyList列表用于存储敌人飞机对象，初始化玩家对象hero=object，object是元类，和用于统计玩家分数的属性score。</li> </ul> <div class="language-python highlighter-rouge"><pre class="highlight"><code>   <span class="c">#类属性</span>
    <span class="n">gameLevel</span> <span class="o">=</span> <span class="mi">1</span>       <span class="c">#简单模式</span>
    <span class="n">g_ememyList</span> <span class="o">=</span> <span class="p">[]</span>    <span class="c">#前面加上g类似全局变量</span>
    <span class="n">score</span> <span class="o">=</span> <span class="mi">0</span>           <span class="c">#用于统计分数</span>
@@ -94,7 +94,7 @@
 	<span class="k">def</span> <span class="nf">setXY</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
 		<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">cls</span><span class="o">.</span><span class="n">g_ememyList</span><span class="p">:</span>
 			<span class="n">i</span><span class="o">.</span><span class="n">move</span><span class="p">()</span>
-</code></pre></div> <ul> <li>有3种类型的对象需要描绘，玩家飞机对象，敌人飞机对象和导弹，这个函数就是用来描绘这些对象，其中导弹和敌机需要判断哪些对象超出屏幕从列表中删除,这里用了del函数，记录下索引值并从列表中删除，同样也可以用pop函数,这里的j为索引值</li> </ul> <div class="language-python highlighter-rouge"><pre class="highlight"><code> <span class="nd">@classmethod</span>
+</code></pre></div> <ul> <li>有3种类型的对象需要描绘，玩家飞机对象，敌人飞机对象和导弹，这个函数就是用来描绘这些对象，其中导弹和敌机需要判断哪些对象超出屏幕从列表中删除,这里用了del函数，记录下索引值并从列表中删除，同样也可以用pop函数,这里的j为索引值。</li> </ul> <div class="language-python highlighter-rouge"><pre class="highlight"><code> <span class="nd">@classmethod</span>
 	<span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="n">cls</span><span class="p">,</span><span class="n">screen</span><span class="p">):</span>
 		<span class="n">delPlaneList</span> <span class="o">=</span> <span class="p">[]</span>
 		<span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
@@ -120,7 +120,7 @@
 		<span class="c">#删除加入到delBulletList中的导弹索引,是同步的</span>
 		<span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">delBulletList</span><span class="p">:</span>
 			<span class="k">del</span> <span class="n">cls</span><span class="o">.</span><span class="n">hero</span><span class="o">.</span><span class="n">bulletList</span><span class="p">[</span><span class="n">m</span><span class="p">]</span>
-</code></pre></div> <ul> <li>玩家飞机对象发射子弹，同时也要判断打中了敌机就让敌机对象和和子弹对象同时从列表中删除。通过<code class="highlighter-rouge">pygame.Rect(self.image.get_rect())</code>获得矩形的值，但是只获得了图像的width和height两个属性，前两个属性left和top都为0，因此还需要设置这两个属性，然后通过collidetect判断两个矩形是否有相交处，其中索引值enemyIndex和bulletIndex需要仔细分析下</li> </ul> <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#自己飞机发射子弹</span>
+</code></pre></div> <ul> <li>玩家飞机对象发射子弹，同时也要判断打中了敌机就让敌机对象和和子弹对象同时从列表中删除。通过pygame.Rect(self.image.get_rect())获得矩形的值，但是只获得了图像的width和height两个属性，前两个属性left和top都为0，因此还需要设置这两个属性，然后通过collidetect判断两个矩形是否有相交处，其中索引值enemyIndex和bulletIndex需要仔细分析下</li> </ul> <div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c">#自己飞机发射子弹</span>
 	<span class="nd">@classmethod</span>
 	<span class="k">def</span> <span class="nf">shoot</span><span class="p">(</span><span class="n">cls</span><span class="p">):</span>
 		<span class="n">cls</span><span class="o">.</span><span class="n">hero</span><span class="o">.</span><span class="n">shoot</span><span class="p">()</span>
